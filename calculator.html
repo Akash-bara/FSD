@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #000000;
+      }
+
+      .box {
+        background: white;
+        padding: 13px;
+        border-radius: 15px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 385px;
+        /* height: 80px; */
+        margin: 60px 50px;
+      }
+
+      #input {
+        width: 100%;
+        height: 60px;
+        text-align: right;
+        font-size: 1.8rem;
+        padding: 10px;
+        border: none;
+        border-radius: 10px;
+        outline: none;
+        background: #f9f9f9;
+        box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+      }
+
+      /* Row styling */
+      .box > div {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      /* Buttons */
+      button {
+        flex: 1;
+        margin: 5px;
+        height: 60px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        background: #ffffff;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease-in-out;
+      }
+
+      button:hover {
+        background: #f1f1f1;
+        transform: scale(1.05);
+      }
+
+      button:active {
+        background: #ddd;
+        transform: scale(0.97);
+      }
+
+      /* Operator buttons */
+      button:nth-child(4),
+      .box > div:first-of-type button {
+        background: #ff9f43;
+        color: white;
+      }
+
+      button:nth-child(4):hover,
+      .box > div:first-of-type button:hover {
+        background: #ff7f00;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <input type="text" placeholder="0" id="input" />
+
+      <div>
+        <button>AC</button>
+        <button>DEL</button>
+        <button>%</button>
+        <button>/</button>
+      </div>
+      <div>
+        <button>9</button>
+        <button>8</button>
+        <button>7</button>
+        <button>*</button>
+      </div>
+      <div>
+        <button>6</button>
+        <button>5</button>
+        <button>4</button>
+        <button>-</button>
+      </div>
+      <div>
+        <button>3</button>
+        <button>2</button>
+        <button>1</button>
+        <button>+</button>
+      </div>
+      <div>
+        <button>00</button>
+        <button>0</button>
+        <button>.</button>
+        <button>=</button>
+      </div>
+    </div>
+    <script>
+      let input = document.getElementById("input");
+      let buttons = document.querySelectorAll("button");
+      let string = "";
+      let arr = Array.from(buttons);
+      arr.forEach((button) => {
+        button.addEventListener("click", (e) => {
+          if (e.target.innerHTML == "=") {
+            string = eval(string);
+            input.value = string;
+          } else if (e.target.innerHTML == "AC") {
+            string = "";
+            input.value = string;
+          } else if (e.target.innerHTML == "DEL") {
+            string = string.substring(0, string.lenght - 1);
+            input.value = string;
+          } else {
+            string += e.target.innerHTML;
+            input.value = string;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
