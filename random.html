@@ -1,11 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Generator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=content_copy" />
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+      font-family: Arial, sans-serif;
+    }
+
+    /* Main Container */
+    .box {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      width: 350px;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Heading */
+    .box h1 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    /* Password input */
+    #pass {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    #pass:focus {
+      border-color: #6c63ff;
+      box-shadow: 0 0 5px rgba(108, 99, 255, 0.3);
+    }
+
+    /* Range Slider */
+    input[type="range"] {
+      width: 100%;
+      margin: 15px 0 10px;
+      -webkit-appearance: none;
+      height: 6px;
+      background: #ddd;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #6c63ff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: #6c63ff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Password length display */
+    .item p,
+    .item span {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Checkbox container */
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 8px 0;
+    }
+
+    .item label {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .item input[type="checkbox"] {
+      transform: scale(1.3);
+      cursor: pointer;
+    }
+
+    /* Generate Button */
+    .generate {
+      border: none;
+      outline: none;
+      padding: 12px;
+      width: 100%;
+      background-color: #6c63ff;
+      border-radius: 10px;
+      margin: 15px 0px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .generate:hover {
+      cursor: pointer;
+      background-color: #554ef7;
+      transform: translateY(-2px);
+    }
+
+    /* Copy Button Styling */
+    .copy {
+      border: none;
+      outline: none;
+      padding: 10px;
+      width: 100%;
+      background-color: #4caf50;
+      border-radius: 10px;
+      margin: 10px 0 0 0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: white;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .copy:hover {
+      cursor: pointer;
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
 <body>
-    
+  <div class="box">
+    <h1>Password Generator</h1>
+    <input type="text" id="pass" placeholder="password" readonly />
+
+    <input type="range" id="Slider" min="1" max="24" value="8" />
+
+    <div class="item">
+      <p>Password Length</p>
+      <span id="slidevalue"></span>
+    </div>
+
+    <div class="item">
+      <label for="uppercase">UpperCase (A-Z)</label>
+      <input type="checkbox" id="uppercase" />
+    </div>
+
+    <div class="item">
+      <label for="lowercase">LowerCase (a-z)</label>
+      <input type="checkbox" id="lowercase" />
+    </div>
+
+    <div class="item">
+      <label for="numbers">Numbers (0-9)</label>
+      <input type="checkbox" id="numbers" />
+    </div>
+
+    <div class="item">
+      <label for="chars">Characters (!@#$)</label>
+      <input type="checkbox" id="chars" />
+    </div>
+
+    <button class="generate" id="generate">GENERATE PASSWORD</button>
+    <button class="copy" id="copy">COPY PASSWORD</button>
+  </div>
+
+  <script>
+    const Slider = document.getElementById("Slider");
+    const slidevalue = document.getElementById("slidevalue");
+    const pass = document.getElementById("pass");
+    const generate = document.getElementById("generate");
+    const copyBtn = document.getElementById("copy");
+    const chars = document.getElementById("chars");
+    const numbers = document.getElementById("numbers");
+    const lowercase = document.getElementById("lowercase");
+    const uppercase = document.getElementById("uppercase");
+
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const num = "0123456789";
+    const sym = "!@#$%^&*():?/][<.,>|]";
+
+    // Initialize slider value
+    slidevalue.textContent = Slider.value;
+
+    // Update slider value
+    Slider.addEventListener("input", () => {
+      slidevalue.textContent = Slider.value;
+    });
+
+    // Generate password
+    generate.addEventListener("click", () => {
+      pass.value = generatepass();
+    });
+
+    function generatepass() {
+      let genPass = "";
+      let allchar = "";
+      allchar += chars.checked ? sym : "";
+      allchar += numbers.checked ? num : "";
+      allchar += lowercase.checked ? lower : "";
+      allchar += uppercase.checked ? upper : "";
+      if (allchar.length === 0) {
+        return "";
+      }
+      for (let i = 0; i < Slider.value; i++) {
+        genPass += allchar.charAt(Math.floor(Math.random() * allchar.length));
+      }
+      return genPass;
+    }
+
+    // Copy password to clipboard
+    copyBtn.addEventListener("click", () => {
+      if (pass.value.trim() !== "") {
+        navigator.clipboard.writeText(pass.value);
+      window.alert("password copied");
+    }
+  });
+  </script>
 </body>
 </html>
